@@ -37,7 +37,7 @@ jobs:
 
       - name: Lint and build unsigned release
         env:
-          COLOROS_NOTIFY_FORMAL_RELEASE: 'true'
+          GLYPH_FORMAL_RELEASE: 'true'
         run: ./gradlew --no-daemon :app:lintRelease :app:assembleRelease
 
       - name: Sign and verify formal release

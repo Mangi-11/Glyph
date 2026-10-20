@@ -1,4 +1,4 @@
-### ColorOS 通知图标增强 隐私政策
+### Glyph 隐私政策
 
 > 简体中文
 
@@ -8,7 +8,7 @@
 
 #### 前言
 
-为帮助您使用 ColorOS 通知图标增强产品(以下简称“本产品”)或服务，我们可能收集与提供服务相关的设备信息或申请设备权限，您有权拒绝或撤回授权；
+为帮助您使用 Glyph 产品(以下简称“本产品”)或服务，我们可能收集与提供服务相关的设备信息或申请设备权限，您有权拒绝或撤回授权；
 
 我们采取了互联网业内标准的技术措施和数据安全措施来保护您的设备信息安全；
 
@@ -139,7 +139,7 @@ F. 设备信息安全影响评估报告表明存在高风险时。
 
 IP 地址： 每台上网的设备都会指定一个编号，称为互联网协议 ( IP ) 地址。这些编号通常都是根据地理区域指定的。IP 地址通常可用于识别设备连接至互联网时所在的位置。
 
-信息收集技术： 我们在《ColorOS 通知图标增强 隐私政策》中所述的“自动收集”包括以下方式： A. Cookie（曲奇档案） Cookie 是您浏览网页时，网站服务器放在客户端（您的计算机、移动电话或其他智能终端内）里面的一个小小的文本文件，当您再次访问相应网站时，网站就可通过
+信息收集技术： 我们在《Glyph 隐私政策》中所述的“自动收集”包括以下方式： A. Cookie（曲奇档案） Cookie 是您浏览网页时，网站服务器放在客户端（您的计算机、移动电话或其他智能终端内）里面的一个小小的文本文件，当您再次访问相应网站时，网站就可通过
 Cookie 识别您的浏览器。Cookie 可能会存储用户偏好及其他信息。您可以将浏览器配置为拒绝所有 Cookie 或在网站发送 Cookie 时显示提示。不过，如果没有 Cookie，某些网站功能或服务可能无法正常工作。 B. Web beacon（网络信标） Web beacon
 是装嵌在网站或电邮内的电子图像文件案或其他技术，可用于计算访客数目、记录您是否及何时阅览电邮或网站，或用以使用某些 Cookie。 C. Log files（日志文件） Log files 储存自动收集的若干数据。该等数据包括互联网协议（ IP ）地址、浏览器类型、互联网服务提供商（
 ISP ）、引用/退出页面、操作系统、日期/时间戳和点击流数据等。 D. ET Tag（实体标签） ET Tag 是在互联网浏览器与互联网服务器之间背后传送的 HTTP 协议标头，可代替 Cookie，用以追踪个别使用者，使我们可更深入地了解和改善我们的服务。 E. JavaScript
@@ -157,7 +157,7 @@ JavaScript 是一种编程语言，用于制作更具互动性和动态的网页
 
 服务器日志： 与大多数网站一样，我们的服务器会自动记录您在访问网站时所发出的网页请求。这些“服务器日志”通常包括您的网络请求、互联网协议地址、浏览器类型、浏览器语言、请求的日期和时间及可以唯一识别您的浏览器的一个或多个 Cookie。
 
-### ColorOSNotifyIcon Privacy Policy
+### Glyph Privacy Policy
 
 > English
 
@@ -167,7 +167,7 @@ Amendment and effective date: April 25, 2022
 
 #### Preface
 
-In order to help you use ColorOSNotifyIcon products (hereinafter referred to as "this product") or services, we may collect device information
+In order to help you use Glyph products (hereinafter referred to as "this product") or services, we may collect device information
 related to the provision of services or apply for device permissions, and you have the right to refuse or withdraw authorization;
 
 We have adopted technical measures and data security measures that are standard in the Internet industry to protect the security of your device
@@ -326,7 +326,7 @@ mobile applications.
 IP Address: Every device that goes online is assigned a number called an Internet Protocol (IP) address. These numbers are usually assigned by
 geographic area. An IP address can often be used to identify where a device is connected to the Internet.
 
-Information collection technology: The "automatic collection" described in the "ColorOSNotifyIcon Privacy Policy" includes the following methods:
+Information collection technology: The "automatic collection" described in the "Glyph Privacy Policy" includes the following methods:
 A. Cookie (cookie file) Cookie is when you browse the web, the website server places it on the client (your A small text file in a computer,
 mobile phone or other intelligent terminal), when you visit the corresponding website again, the website can pass Cookies identify your browser.
 Cookies may store user preferences and other information. You can configure your browser to refuse all cookies or to display a prompt when a

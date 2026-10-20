@@ -4,13 +4,13 @@ plugins {
 }
 
 val formalRelease = when (
-    val value = providers.environmentVariable("COLOROS_NOTIFY_FORMAL_RELEASE").orNull
+    val value = providers.environmentVariable("GLYPH_FORMAL_RELEASE").orNull
         ?.trim()
         ?.lowercase()
 ) {
     null, "", "false" -> false
     "true" -> true
-    else -> error("COLOROS_NOTIFY_FORMAL_RELEASE must be true or false, but was '$value'")
+    else -> error("GLYPH_FORMAL_RELEASE must be true or false, but was '$value'")
 }
 
 android {

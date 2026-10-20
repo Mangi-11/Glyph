@@ -1,8 +1,8 @@
-# ColorOS 通知图标增强
+# Glyph
 
-为 ColorOS 优化通知图标，并适配原生通知图标规范。
+Glyph 是 fork 自 [fankes/ColorOSNotifyIcon](https://github.com/fankes/ColorOSNotifyIcon) 的非官方个人分支，为 ColorOS 优化通知图标，并适配原生通知图标规范。本分支由 Mangi-11 独立维护和发布，与原作者无关，也未获得原作者背书。
 
-> Fork 自 [fankes/ColorOSNotifyIcon](https://github.com/fankes/ColorOSNotifyIcon) 的个人分支，进行了一些微小的工作。使用现代化的 [libxposed API 102](https://github.com/libxposed/api) 重构了 Hook 层，并使用 [Miuix](https://github.com/compose-miuix-ui/miuix) 重写了 UI。
+使用现代化的 [libxposed API 102](https://github.com/libxposed/api) 重构了 Hook 层，并使用 [Miuix](https://github.com/compose-miuix-ui/miuix) 重写了 UI。应用包名为 `io.github.mangi.glyph`。
 
 ## 功能
 

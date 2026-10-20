@@ -42,8 +42,8 @@ jobs:
           test -n "$version_name"
           test -n "$debug_source"
           test -n "$snapshot_source"
-          debug_target="${RUNNER_TEMP}/ColorOSNotifyIcon-${version_name}-debug-${short_sha}.apk"
-          snapshot_target="${RUNNER_TEMP}/ColorOSNotifyIcon-${version_name}-snapshot-${short_sha}.apk"
+          debug_target="${RUNNER_TEMP}/Glyph-${version_name}-debug-${short_sha}.apk"
+          snapshot_target="${RUNNER_TEMP}/Glyph-${version_name}-snapshot-${short_sha}.apk"
           install -m 0644 "$debug_source" "$debug_target"
           install -m 0644 "$snapshot_source" "$snapshot_target"
           echo "DEBUG_APK_PATH=$debug_target" >> "$GITHUB_ENV"
@@ -53,19 +53,19 @@ jobs:
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           path: ${{ env.DEBUG_APK_PATH }}
-          name: ColorOSNotifyIcon-debug-${{ github.sha }}
+          name: Glyph-debug-${{ github.sha }}
           if-no-files-found: error
 
       - name: Upload Artifacts (Snapshot)
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           path: ${{ env.SNAPSHOT_APK_PATH }}
-          name: ColorOSNotifyIcon-snapshot-${{ github.sha }}
+          name: Glyph-snapshot-${{ github.sha }}
           if-no-files-found: error
 
       - name: Upload Snapshot Mapping
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           path: app/build/outputs/mapping/release/mapping.txt
-          name: ColorOSNotifyIcon-snapshot-mapping-${{ github.sha }}
+          name: Glyph-snapshot-mapping-${{ github.sha }}
           if-no-files-found: error

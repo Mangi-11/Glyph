@@ -33,5 +33,5 @@ gropify {
     }
     rootProject { common { isEnabled = false } }
 }
-rootProject.name = "ColorOSNotifyIcon"
+rootProject.name = "Glyph"
 include(":app")

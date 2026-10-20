@@ -11,7 +11,7 @@
     <uses-sdk tools:overrideLibrary="top.yukonga.miuix.kmp.blur,top.yukonga.miuix.kmp.shader" />
 
     <application
-        android:name=".ColorOSNotifyIconApplication"
+        android:name=".GlyphApplication"
         android:allowBackup="false"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:description="@string/app_description"
@@ -20,7 +20,7 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/Theme.ColorOSNotifyIcon">
+        android:theme="@style/Theme.Glyph">
 
         <activity
             android:name=".ui.home.HomeActivity"
