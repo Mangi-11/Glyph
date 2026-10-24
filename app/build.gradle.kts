@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.kotlin.ksp)
 }
 
 val formalRelease = when (
@@ -74,7 +75,18 @@ androidComponents {
 }
 
 dependencies {
+    val yukiHookBom = platform(libs.yukihook.bom)
+    implementation(yukiHookBom)
+    ksp(yukiHookBom)
+    implementation(libs.yukihook.core)
+    implementation(libs.yukihook.runtime.libxposed)
+    ksp(libs.yukihook.compiler)
+    implementation(platform(libs.kavaref.bom))
+    implementation(libs.kavaref.core)
+
+    // YukiHook's modern runtime needs the framework API at compile time only.
     compileOnly(libs.libxposed.api)
+    // Keep the existing transactional remote-config transport and preference listeners.
     implementation(libs.libxposed.service)
     implementation(libs.okhttp)
     implementation(libs.androidx.core.ktx)

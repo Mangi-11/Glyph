@@ -1,5 +1,6 @@
 package io.github.mangi.glyph.hook.reflect
 
+import com.highcapable.kavaref.KavaRef.Companion.resolve
 import java.lang.reflect.Field
 import java.lang.reflect.Method
 
@@ -23,9 +24,10 @@ internal object Reflection {
     ): Field? {
         var current: Class<*>? = clazz
         while (current != null && current != Any::class.java) {
-            current.declaredFields.firstOrNull {
-                it.name == name && (expectedType == null || expectedType.isAssignableFrom(it.type))
-            }?.let {
+            current.resolve().optional(silent = true).firstFieldOrNull {
+                this.name = name
+                expectedType?.let { expected -> type { expected.isAssignableFrom(it) } }
+            }?.self?.let {
                 it.isAccessible = true
                 return it
             }
@@ -48,11 +50,12 @@ internal object Reflection {
     ): Method? {
         var current: Class<*>? = clazz
         while (current != null && current != Any::class.java) {
-            current.declaredMethods.firstOrNull { method ->
-                method.name == name &&
-                    method.parameterTypes.contentEquals(params) &&
-                    (expectedReturnType == null || expectedReturnType.isAssignableFrom(method.returnType))
-            }?.let {
+            current.resolve().optional(silent = true).firstMethodOrNull {
+                this.name = name
+                // Keep exact JVM signatures, including primitive versus boxed parameters.
+                parameters { it.toTypedArray().contentEquals(params) }
+                expectedReturnType?.let { expected -> returnType { expected.isAssignableFrom(it) } }
+            }?.self?.let {
                 it.isAccessible = true
                 return it
             }

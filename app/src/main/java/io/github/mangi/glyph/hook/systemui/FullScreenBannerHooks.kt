@@ -43,7 +43,7 @@ internal class FullScreenBannerHooks(
             val entry = chain.args.getOrNull(0)
             if (entry != null) lastEntry = entry
             val result = chain.proceed()
-            val helper = chain.thisObject
+            val helper = chain.instanceOrNull
             val context = members.helperContext?.get(helper) as? Context
             val banner = members.helperFullScreenBanner?.get(helper)
             if (context != null && entry != null && banner != null) {
@@ -60,7 +60,7 @@ internal class FullScreenBannerHooks(
             if (entry != null) lastEntry = entry
             val builder = chain.proceed()
             val context = chain.args.getOrNull(0) as? Context
-                ?: members.helperContext?.get(chain.thisObject) as? Context
+                ?: members.helperContext?.get(chain.instanceOrNull) as? Context
             if (builder != null && context != null && entry != null) {
                 patchBuilderIcon(context, builder, entry)
             }
@@ -71,7 +71,7 @@ internal class FullScreenBannerHooks(
     private fun installUpdateBannerHook() {
         val method = members.updateBanner ?: return
         hooks.install(method, "systemui.fullscreen_banner.updateBanner") { chain ->
-            val banner = chain.thisObject ?: return@install chain.proceed()
+            val banner = chain.instanceOrNull ?: return@install chain.proceed()
             val builder = chain.args.getOrNull(0)
             val context = bannerContext(banner)
             val entry = resolveEntry(banner)
@@ -93,7 +93,8 @@ internal class FullScreenBannerHooks(
     private fun installSetIconHook() {
         val method = members.bannerSetIcon ?: return
         hooks.install(method, "systemui.fullscreen_banner.setIcon") { chain ->
-            val banner = chain.thisObject ?: return@install chain.proceed()
+            val args = chain.args.toTypedArray()
+            val banner = chain.instanceOrNull ?: return@install chain.proceed(args)
             val context = bannerContext(banner)
             val entry = resolveEntry(banner)
             val plan = if (context != null && entry != null) {
@@ -102,15 +103,15 @@ internal class FullScreenBannerHooks(
                 null
             }
             if (plan != null) {
-                chain.args[0] = plan.drawable
+                args[0] = plan.drawable
                 val avatar = chain.args.getOrNull(2) as? Drawable
                 if (avatar != null) {
-                    chain.args[2] = plan.drawable.constantState?.newDrawable()?.mutate() ?: plan.drawable
+                    args[2] = plan.drawable.constantState?.newDrawable()?.mutate() ?: plan.drawable
                 }
                 // ColorOS 17: largeIconWithBadge takes precedence over the icon argument.
-                if (chain.args.size > 4) chain.args[4] = null
+                if (chain.args.size > 4) args[4] = null
             }
-            val result = chain.proceed()
+            val result = chain.proceed(args)
             if (plan != null) {
                 schedulePanelRenderPlan(banner, plan)
             } else if (context != null && entry != null) {
@@ -123,13 +124,14 @@ internal class FullScreenBannerHooks(
     private fun installBackgroundIconHook() {
         val method = members.backgroundSetIcon ?: return
         hooks.install(method, "systemui.fullscreen_banner.background.setIcon") { chain ->
-            val context = (chain.thisObject as? View)?.context
-            val entry = lastEntry ?: return@install chain.proceed()
+            val args = chain.args.toTypedArray()
+            val context = (chain.instanceOrNull as? View)?.context
+            val entry = lastEntry ?: return@install chain.proceed(args)
             val plan = context?.let { resolvePanelPlan(it, entry) }
             if (plan != null) {
-                chain.args[0] = backgroundDrawable(plan.drawable)
+                args[0] = backgroundDrawable(plan.drawable)
             }
-            chain.proceed()
+            chain.proceed(args)
         }
     }
 

@@ -1,6 +1,9 @@
 [versions]
 agp = "9.4.1"
 kotlin = "2.4.20"
+ksp = "2.3.12"
+yukihook = "1.5.0"
+kavaref = "1.1.1"
 libxposed-api = "102.0.0"
 libxposed-service = "102.0.0"
 okhttp = "5.5.0"
@@ -15,8 +18,15 @@ hiddenapibypass = "6.1"
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+kotlin-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 
 [libraries]
+yukihook-bom = { module = "com.highcapable.yukihookapi:yukihook-bom", version.ref = "yukihook" }
+yukihook-core = { module = "com.highcapable.yukihookapi:yukihook-core" }
+yukihook-compiler = { module = "com.highcapable.yukihookapi:yukihook-compiler" }
+yukihook-runtime-libxposed = { module = "com.highcapable.yukihookapi:yukihook-runtime-libxposed" }
+kavaref-bom = { module = "com.highcapable.kavaref:kavaref-bom", version.ref = "kavaref" }
+kavaref-core = { module = "com.highcapable.kavaref:kavaref-core" }
 libxposed-api = { group = "io.github.libxposed", name = "api", version.ref = "libxposed-api" }
 libxposed-service = { group = "io.github.libxposed", name = "service", version.ref = "libxposed-service" }
 okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }

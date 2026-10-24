@@ -30,7 +30,7 @@ internal class NotificationPanelHooks(
         members.headerOnContentUpdated?.let { method ->
             hooks.install(method, "systemui.panel.header.onContentUpdated") { chain ->
                 val result = chain.proceed()
-                chain.thisObject?.let { wrapper ->
+                chain.instanceOrNull?.let { wrapper ->
                     applyPanelIcon(wrapper, rowCandidate = chain.args.firstOrNull())
                 }
                 result
@@ -39,7 +39,7 @@ internal class NotificationPanelHooks(
         members.headerResolveHeaderViews?.let { method ->
             hooks.install(method, "systemui.panel.header.resolveHeaderViews") { chain ->
                 val result = chain.proceed()
-                chain.thisObject?.let { wrapper -> applyPanelIcon(wrapper) }
+                chain.instanceOrNull?.let { wrapper -> applyPanelIcon(wrapper) }
                 result
             }
         }
@@ -47,7 +47,7 @@ internal class NotificationPanelHooks(
             hooks.install(method, "systemui.panel.header.setIsChildInGroup") { chain ->
                 val result = chain.proceed()
                 if (chain.args.firstOrNull() == false) {
-                    chain.thisObject?.let(::applyPanelIcon)
+                    chain.instanceOrNull?.let(::applyPanelIcon)
                 }
                 result
             }
@@ -55,7 +55,7 @@ internal class NotificationPanelHooks(
         members.oplusGroupInitIcon?.let { method ->
             hooks.install(method, "systemui.panel.group.initIcon") { chain ->
                 val result = chain.proceed()
-                chain.thisObject?.let { wrapper ->
+                chain.instanceOrNull?.let { wrapper ->
                     applyPanelIcon(wrapper, target = PanelIconTarget.OplusGroupSummary)
                 }
                 result
@@ -64,7 +64,7 @@ internal class NotificationPanelHooks(
         members.oplusGroupResolveHeaderViews?.let { method ->
             hooks.install(method, "systemui.panel.group.resolveHeaderViews") { chain ->
                 val result = chain.proceed()
-                chain.thisObject?.let { wrapper ->
+                chain.instanceOrNull?.let { wrapper ->
                     applyPanelIcon(wrapper, target = PanelIconTarget.OplusGroupSummary)
                 }
                 result
@@ -117,18 +117,19 @@ internal class NotificationPanelHooks(
         // colors the pill here, then its callback paints a round background onto the icon view.
         members.groupIconInitEntryIconDrawable?.let { method ->
             hooks.install(method, "systemui.panel.group.initEntryIconDrawable") { chain ->
-                if (chain.args.getOrNull(4) as? Boolean != false) return@install chain.proceed()
+                val args = chain.args.toTypedArray()
+                if (chain.args.getOrNull(4) as? Boolean != false) return@install chain.proceed(args)
                 val snapshot = configuration.snapshot
-                if (!snapshot.config.panelIconReplacementEnabled) return@install chain.proceed()
-                val entry = chain.args.getOrNull(0) ?: return@install chain.proceed()
+                if (!snapshot.config.panelIconReplacementEnabled) return@install chain.proceed(args)
+                val entry = chain.args.getOrNull(0) ?: return@install chain.proceed(args)
                 val iconView = chain.args.getOrNull(1) as? ImageView
-                    ?: return@install chain.proceed()
+                    ?: return@install chain.proceed(args)
                 chain.args.getOrNull(5)?.let { originalCallback ->
-                    chain.args[5] = wrapHostCallback(method.parameterTypes[5], originalCallback) {
+                    args[5] = wrapHostCallback(method.parameterTypes[5], originalCallback) {
                         applyGroupSummaryIcon(iconView, entry, snapshot)
                     }
                 }
-                val result = chain.proceed()
+                val result = chain.proceed(args)
                 applyGroupSummaryIcon(iconView, entry, snapshot)
                 result
             }
@@ -179,7 +180,7 @@ internal class NotificationPanelHooks(
         hooks.install(method, "systemui.panel.header.updateIconColor") { chain ->
             val snapshot = configuration.snapshot
             if (!snapshot.config.panelIconReplacementEnabled) return@install chain.proceed()
-            val extension = chain.thisObject ?: return@install chain.proceed()
+            val extension = chain.instanceOrNull ?: return@install chain.proceed()
             val shouldBlockColorUpdate = try {
                 val wrapper = oplusHeader.getBase.invoke(extension)
                 val icon = wrapper?.let { getIcon.invoke(it) as? ImageView }
@@ -205,7 +206,7 @@ internal class NotificationPanelHooks(
         val method = oplusHeader.updateIconRoundness ?: return
         hooks.install(method, "systemui.panel.header.updateIconRoundness") { chain ->
             val result = chain.proceed()
-            chain.thisObject?.let { extension ->
+            chain.instanceOrNull?.let { extension ->
                 try {
                     oplusHeader.getBase.invoke(extension)?.let { wrapper ->
                         applyPanelIcon(wrapper, target = wrapper.iconTarget)

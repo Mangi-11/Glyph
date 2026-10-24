@@ -1,5 +1,6 @@
 package io.github.mangi.glyph.hook.systemui
 
+import android.content.SharedPreferences
 import android.service.notification.StatusBarNotification
 import io.github.mangi.glyph.diagnostics.Diagnostics
 import io.github.mangi.glyph.hook.HookRegistrar
@@ -8,10 +9,11 @@ import io.github.mangi.glyph.hook.icon.ThemeIconProvider
 import io.github.mangi.glyph.hook.installationFailure
 import io.github.mangi.glyph.hook.memberMissing
 import io.github.mangi.glyph.hook.runtimeFailure
-import io.github.libxposed.api.XposedInterface
+import com.highcapable.yukihookapi.hook.xposed.file.YukiHookSharedFiles
 
 internal class SystemUiRuntime(
-    private val xposed: XposedInterface,
+    private val openConfigPreferences: () -> SharedPreferences,
+    private val sharedFiles: YukiHookSharedFiles,
     private val hooks: HookRegistrar,
     private val diagnostics: Diagnostics,
     private val processName: String,
@@ -20,7 +22,8 @@ internal class SystemUiRuntime(
         val iconConfiguration = OplusIconConfigurationReader(diagnostics)
         val themeIcons = ThemeIconProvider(diagnostics, iconConfiguration)
         val configuration = SystemUiConfiguration(
-            xposed = xposed,
+            openConfigPreferences = openConfigPreferences,
+            sharedFiles = sharedFiles,
             diagnostics = diagnostics,
             processName = processName,
             themeIcons = themeIcons,
@@ -66,7 +69,7 @@ internal class SystemUiRuntime(
                     entryMembers.predicate,
                     "systemui.useAppIconForSmallIcon.entry",
                 ) { chain ->
-                    val extension = chain.thisObject ?: return@install chain.proceed()
+                    val extension = chain.instanceOrNull ?: return@install chain.proceed()
                     val currentResult = try {
                         val entry = entryMembers.getBase.invoke(extension)
                         val sbn = entry?.let {

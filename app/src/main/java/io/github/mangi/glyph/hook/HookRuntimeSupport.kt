@@ -7,70 +7,61 @@ import io.github.mangi.glyph.diagnostics.DiagnosticRecord
 import io.github.mangi.glyph.diagnostics.DiagnosticSink
 import io.github.mangi.glyph.diagnostics.Diagnostics
 import io.github.mangi.glyph.diagnostics.OccurrencePolicy
-import io.github.libxposed.api.XposedInterface
+import com.highcapable.yukihookapi.hook.log.YLog
+import com.highcapable.yukihookapi.hook.param.HookChain
+import com.highcapable.yukihookapi.hook.param.PackageParam
 import java.lang.reflect.Executable
 
-internal class XposedDiagnosticSink(
-    private val xposed: XposedInterface,
+internal class YukiHookDiagnosticSink(
     private val processName: String,
 ) : DiagnosticSink {
     override fun write(record: DiagnosticRecord) {
         val contextualRecord = record.copy(
             attributes = mapOf("process" to processName) + record.attributes,
         )
+        val message = contextualRecord.render()
         val cause = contextualRecord.cause
-        if (cause == null) {
-            xposed.log(contextualRecord.level.priority, ModuleInfo.LOG_TAG, contextualRecord.render())
-        } else {
-            xposed.log(
-                contextualRecord.level.priority,
-                ModuleInfo.LOG_TAG,
-                contextualRecord.render(),
-                cause,
-            )
+        when (contextualRecord.level) {
+            DiagnosticLevel.Debug -> YLog.debug(message, cause, ModuleInfo.LOG_TAG, YLog.EnvType.XPOSED)
+            DiagnosticLevel.Info -> YLog.info(message, cause, ModuleInfo.LOG_TAG, YLog.EnvType.XPOSED)
+            DiagnosticLevel.Warning -> YLog.warn(message, cause, ModuleInfo.LOG_TAG, YLog.EnvType.XPOSED)
+            DiagnosticLevel.Error -> YLog.error(message, cause, ModuleInfo.LOG_TAG, YLog.EnvType.XPOSED)
         }
     }
 }
 
 internal class HookRegistrar(
-    private val xposed: XposedInterface,
+    private val packageParam: PackageParam,
     private val diagnostics: Diagnostics,
     private val processName: String,
 ) {
-    /**
-     * Installs one independently degradable hook. Framework [Error]s intentionally escape.
-     */
+    /** YukiHook isolates registration failures and protects the host from callback failures. */
     fun install(
         executable: Executable,
         id: String,
-        interceptor: (XposedInterface.Chain) -> Any?,
-    ): Boolean = try {
-        xposed.hook(executable)
-            .setId("${ModuleInfo.LOG_TAG}.$id")
-            .setExceptionMode(XposedInterface.ExceptionMode.PROTECTIVE)
-            .intercept(XposedInterface.Hooker(interceptor))
-        diagnostics.debug(
-            event = DiagnosticEvent.HookInstalled,
-            message = "Hook 已安装",
-            attributes = attributes(id),
-            occurrence = OccurrencePolicy.Once("$processName:$id"),
-        )
-        true
-    } catch (exception: Exception) {
-        diagnostics.report(
-            level = DiagnosticLevel.Error,
-            event = DiagnosticEvent.HookInstallFailed,
-            message = "Hook 安装失败",
-            cause = exception,
-            attributes = attributes(id),
-            occurrence = OccurrencePolicy.Once("$processName:$id"),
-        )
-        false
+        interceptor: (HookChain) -> Any?,
+    ) {
+        try {
+            with(packageParam) {
+                executable.intercept { interceptor(this) }
+                    .onCallbackFailure { _, cause ->
+                        diagnostics.runtimeFailure(
+                            scope = "$processName:$id",
+                            message = "Hook 回调失败，交回宿主调用链",
+                            cause = cause,
+                        )
+                    }
+            }
+            // Registration failures are reported synchronously by YukiHook itself; its handle
+            // does not expose a success flag, so do not emit an unconditional success event.
+        } catch (exception: Exception) {
+            diagnostics.installationFailure(
+                scope = "$processName:$id",
+                message = "Hook 初始化失败",
+                cause = exception,
+            )
+        }
     }
-
-    private fun attributes(id: String) = mapOf(
-        "hook" to id,
-    )
 }
 
 internal fun Diagnostics.memberMissing(

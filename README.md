@@ -1,8 +1,10 @@
 # Glyph
 
-Glyph 是 fork 自 [fankes/ColorOSNotifyIcon](https://github.com/fankes/ColorOSNotifyIcon) 的非官方个人分支，为 ColorOS 优化通知图标，并适配原生通知图标规范。本分支由 Mangi-11 独立维护和发布，与原作者无关，也未获得原作者背书。
+Glyph 是 fork 自 [fankes/ColorOSNotifyIcon](https://github.com/fankes/ColorOSNotifyIcon) 的非官方个人分支，为 ColorOS 优化通知图标，可适配原生通知图标规范，或让通知图标跟随桌面当前主题。本分支由 [Mangi-11](https://github.com/Mangi-11) 独立维护和发布。
 
-使用现代化的 [libxposed API 102](https://github.com/libxposed/api) 重构了 Hook 层，并使用 [Miuix](https://github.com/compose-miuix-ui/miuix) 重写了 UI。应用包名为 `io.github.mangi.glyph`。
+Hook 层采用原作者 [fankes](https://github.com/fankes) 开发的 [YukiHook](https://github.com/HighCapable/YukiHook)，搭配 [KavaRef](https://github.com/HighCapable/KavaRef) 进行反射查找。YukiHook 提供简洁的 Kotlin Hook API、自动生成的模块入口和统一的日志支持，减少重复代码，便于维护与扩展。
+
+当前使用 YukiHook 1.5.0 / KavaRef 1.1.1，采用 libxposed API 102 底座，并使用 [Miuix](https://github.com/compose-miuix-ui/miuix) 重写了 UI。应用包名为 `io.github.mangi.glyph`。
 
 ## 功能
 
@@ -102,11 +104,10 @@ Oplus Push 代表目标应用生成的位图不等同于应用原生 `smallIcon`
 
 ## 与原版的区别
 
-Fork 自 [fankes/ColorOSNotifyIcon](https://github.com/fankes/ColorOSNotifyIcon)，保留原始协议、版权声明和贡献者致谢。
+本分支沿用原项目的 YukiHook + KavaRef 技术栈，保留原始协议、版权声明和贡献者致谢。Hook 入口与作用域配置由 KSP 自动生成，配置和规则文件通过 libxposed 远程同步。
 
 主要改动：
 
-- 用 [modern libxposed API 102](https://github.com/libxposed/api) 重写了 Hook 入口
 - 移除了旧框架兼容层
 - 用 [Miuix](https://github.com/compose-miuix-ui/miuix) 重写了 App UI（首页 / 规则 / 关于三栏，液态玻璃底栏）
 - 关于页支持打开本项目与 GitHub Releases 检查更新
@@ -139,4 +140,9 @@ Fork 自 [fankes/ColorOSNotifyIcon](https://github.com/fankes/ColorOSNotifyIcon)
 
 感谢原作者 [fankes](https://github.com/fankes) 的开源基础，以及各位图标规则维护者的持续付出，得以告别丑陋的默认图标，带来愉悦。
 
-通用占位符采用 Google Material Icons 的 [`circle_notifications`](https://github.com/google/material-design-icons)，按 [Apache-2.0](third_party/material-design-icons/LICENSE) 许可证使用。
+- [ColorOSNotifyIcon](https://github.com/fankes/ColorOSNotifyIcon)：本分支的原始项目。
+- [YukiHook](https://github.com/HighCapable/YukiHook)：同样由原作者 fankes 开发，为本分支提供 Hook 开发支持。
+- [KavaRef](https://github.com/HighCapable/KavaRef)：提供 Kotlin 反射查找能力。
+- [Miuix](https://github.com/compose-miuix-ui/miuix)：提供应用 UI 组件。
+- [ANIP](https://github.com/BetterAndroid/android-notification-icon-project)：提供通知图标规则，感谢规则维护者的持续更新。
+- 通用占位符采用 Google Material Icons 的 [`circle_notifications`](https://github.com/google/material-design-icons)，按 [Apache-2.0](third_party/material-design-icons/LICENSE) 许可证使用。

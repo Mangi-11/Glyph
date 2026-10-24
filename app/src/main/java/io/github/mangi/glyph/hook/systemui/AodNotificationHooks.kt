@@ -77,13 +77,14 @@ internal class AodNotificationHooks(
     private fun installLockScreenIconDataCtorHook() {
         val ctor = members.lockScreenIconDataCtor ?: return
         hooks.install(ctor, "systemui.aod.lockScreenIconData") { chain ->
+            val args = chain.args.toTypedArray()
             val key = chain.args.getOrNull(0) as? String
             val packageName = chain.args.getOrNull(1) as? String
             val context = appContext()
             if (context != null) {
-                resolveReplacementDrawable(context, key, packageName)?.let { chain.args[2] = it }
+                resolveReplacementDrawable(context, key, packageName)?.let { args[2] = it }
             }
-            chain.proceed()
+            chain.proceed(args)
         }
     }
 
@@ -94,7 +95,7 @@ internal class AodNotificationHooks(
         hooks.install(method, "systemui.aod.updateNotificationView") { chain ->
             val sbn = chain.args.getOrNull(0) as? StatusBarNotification
                 ?: return@install chain.proceed()
-            val layout = chain.thisObject ?: return@install chain.proceed()
+            val layout = chain.instanceOrNull ?: return@install chain.proceed()
             val context = layoutContext.get(layout) as? Context
                 ?: return@install chain.proceed()
             val replacement = resolveReplacementIcon(context, sbn.key, sbn.packageName, sbn)

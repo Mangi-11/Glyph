@@ -1,8 +1,4 @@
--dontwarn io.github.libxposed.annotation.**
--adaptresourcefilecontents META-INF/xposed/java_init.list
--keep,allowoptimization,allowobfuscation public class * extends io.github.libxposed.api.XposedModule {
-    public <init>();
-}
+# YukiHook's libxposed runtime supplies the generated entry's consumer keep rules.
 
 # Debug diagnostics are useful during development but must not enter Release artifacts.
 -assumenosideeffects class io.github.mangi.glyph.diagnostics.Diagnostics {

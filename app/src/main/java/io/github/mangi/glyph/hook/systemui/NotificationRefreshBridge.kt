@@ -25,7 +25,7 @@ internal class NotificationRefreshBridge(
         if (attach != null) {
             hooks.install(attach, "systemui.refresh.coordinator.attach") { chain ->
                 val result = chain.proceed()
-                coordinator = chain.thisObject ?: coordinator
+                coordinator = chain.instanceOrNull ?: coordinator
                 result
             }
         } else {

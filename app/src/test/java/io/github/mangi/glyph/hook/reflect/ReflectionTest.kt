@@ -56,4 +56,41 @@ class ReflectionTest {
         @Suppress("unused")
         fun select(value: Int): String = "int"
     }
+    private open class Parent {
+        private val value: CharSequence = "parent"
+        private fun label(number: Int): String = "item:$number"
+        private fun label(): String = "empty"
+    }
+
+    private class Child : Parent() {
+        private val value: Int = 42
+    }
+
+    @Test
+    fun `field lookup skips incompatible shadow and accesses private parent field`() {
+        val field = requireNotNull(Reflection.findField(Child::class.java, "value", CharSequence::class.java))
+        assertEquals(Parent::class.java, field.declaringClass)
+        assertEquals("parent", field.get(Child()))
+        assertEquals(42, Reflection.findField(Child::class.java, "value")?.get(Child()))
+    }
+
+    @Test
+    fun `method lookup preserves exact parameters and assignable return type`() {
+        val method = requireNotNull(
+            Reflection.findMethodReturning(
+                Child::class.java, "label", CharSequence::class.java, Int::class.javaPrimitiveType!!,
+            ),
+        )
+        assertEquals("item:7", method.invoke(Child(), 7))
+        assertEquals("empty", Reflection.findMethod(Child::class.java, "label")?.invoke(Child()))
+        assertNull(Reflection.findMethod(Child::class.java, "label", Int::class.javaObjectType))
+        assertNull(Reflection.findMethodReturning(Child::class.java, "label", Number::class.java))
+    }
+
+    @Test
+    fun `optional members remain absent without throwing or searching Object`() {
+        assertNull(Reflection.findField(Child::class.java, "missing"))
+        assertNull(Reflection.findMethod(Child::class.java, "missing"))
+        assertNull(Reflection.findMethod(Child::class.java, "toString"))
+    }
 }

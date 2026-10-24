@@ -22,7 +22,7 @@ internal class StatusBarHooks(
 
     fun install(members: StatusBarMembers) {
         hooks.install(members.setStatusBarIcon, "systemui.statusbar.setIcon") { chain ->
-            val statusBarIconView = chain.thisObject as? View
+            val statusBarIconView = chain.instanceOrNull as? View
                 ?: return@install chain.proceed()
             val descriptor = chain.args.getOrNull(0)
                 ?: return@install chain.proceed()
@@ -93,7 +93,7 @@ internal class StatusBarHooks(
             val statusBarIcon = chain.proceed() ?: return@install null
             val snapshot = configuration.snapshot
             val notificationEntry = chain.args.getOrNull(0) ?: return@install statusBarIcon
-            val iconManager = chain.thisObject ?: return@install statusBarIcon
+            val iconManager = chain.instanceOrNull ?: return@install statusBarIcon
             try {
                 if (
                     members.statusBarIconType.get(statusBarIcon) ===

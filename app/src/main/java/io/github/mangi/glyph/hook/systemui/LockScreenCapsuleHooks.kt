@@ -42,9 +42,10 @@ internal class LockScreenCapsuleHooks(
     private fun installNotificationIconDataCtorHooks() {
         for (ctor in members.notificationIconDataCtors) {
             hooks.install(ctor, "systemui.lockscreen.capsule.notificationIconData") { chain ->
-                if (!lockScreenCapsuleEnabled()) return@install chain.proceed()
-                if (isMediaPlayerArg(chain.args.getOrNull(7))) return@install chain.proceed()
-                val context = appContext() ?: return@install chain.proceed()
+                val args = chain.args.toTypedArray()
+                if (!lockScreenCapsuleEnabled()) return@install chain.proceed(args)
+                if (isMediaPlayerArg(chain.args.getOrNull(7))) return@install chain.proceed(args)
+                val context = appContext() ?: return@install chain.proceed(args)
                 patchNotificationIconData(
                     context = context,
                     iconData = null,
@@ -52,12 +53,12 @@ internal class LockScreenCapsuleHooks(
                     packageName = chain.args.getOrNull(1) as? String,
                     entry = chain.args.getOrNull(6),
                     onPatched = { drawable, icon ->
-                        chain.args[2] = drawable
-                        chain.args[3] = icon
-                        chain.args[5] = null
+                        args[2] = drawable
+                        args[3] = icon
+                        args[5] = null
                     },
                 )
-                chain.proceed()
+                chain.proceed(args)
             }
         }
     }
@@ -67,7 +68,7 @@ internal class LockScreenCapsuleHooks(
         hooks.install(method, "systemui.lockscreen.capsule.getRoundedIcon") { chain ->
             if (!lockScreenCapsuleEnabled()) return@install chain.proceed()
             val iconData = chain.args.getOrNull(0) ?: return@install chain.proceed()
-            val context = (chain.thisObject as? View)?.context ?: return@install chain.proceed()
+            val context = (chain.instanceOrNull as? View)?.context ?: return@install chain.proceed()
             try {
                 patchNotificationIconData(
                     context = context,
@@ -115,7 +116,7 @@ internal class LockScreenCapsuleHooks(
             hooks.install(method, "systemui.lockscreen.capsule.card_bind") { chain ->
                 if (!lockScreenCapsuleEnabled()) return@install chain.proceed()
                 val innerData = chain.args.getOrNull(0) ?: return@install chain.proceed()
-                val card = chain.thisObject ?: return@install chain.proceed()
+                val card = chain.instanceOrNull ?: return@install chain.proceed()
                 chain.proceed()
                 scheduleAggregateGlyphRefresh(card, innerData)
             }
@@ -150,18 +151,19 @@ internal class LockScreenCapsuleHooks(
     private fun installCapsuleEntryIconDrawableHook() {
         val method = members.groupIconInitEntryIconDrawable ?: return
         hooks.install(method, "systemui.lockscreen.capsule.initEntryIconDrawable") { chain ->
-            if (!lockScreenCapsuleEnabled()) return@install chain.proceed()
-            if (chain.args.getOrNull(4) as? Boolean != true) return@install chain.proceed()
-            val entry = chain.args.getOrNull(0) ?: return@install chain.proceed()
+            val args = chain.args.toTypedArray()
+            if (!lockScreenCapsuleEnabled()) return@install chain.proceed(args)
+            if (chain.args.getOrNull(4) as? Boolean != true) return@install chain.proceed(args)
+            val entry = chain.args.getOrNull(0) ?: return@install chain.proceed(args)
             val iconView = chain.args.getOrNull(1) as? ImageView
-                ?: return@install chain.proceed()
-            if (!isLockScreenIslandIconView(iconView)) return@install chain.proceed()
+                ?: return@install chain.proceed(args)
+            if (!isLockScreenIslandIconView(iconView)) return@install chain.proceed(args)
             chain.args.getOrNull(5)?.let { originalCallback ->
-                chain.args[5] = wrapHostCallback(method.parameterTypes[5], originalCallback) {
+                args[5] = wrapHostCallback(method.parameterTypes[5], originalCallback) {
                     iconView.post { overrideGroupIconColor(iconView, entry) }
                 }
             }
-            chain.proceed()
+            chain.proceed(args)
             iconView.post { overrideGroupIconColor(iconView, entry) }
         }
     }

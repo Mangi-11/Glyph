@@ -8,7 +8,7 @@ body:
       value: |
         ### 请先确认环境范围
 
-        Glyph 当前仅维护 ColorOS 16 / Android 16（API 36）与 modern libxposed API 101 / LSPosed 环境。
+        Glyph 当前仅维护 ColorOS 16 / Android 16（API 36）与 YukiHook（libxposed API 102 底座） / LSPosed 环境。
         旧版 Android、旧版 ColorOS、legacy Xposed API、非官方系统修改版不在当前维护范围内。
 
         发生异常、崩溃、闪退或功能性问题时，请提供包含 `Glyph` 的 LSPosed 日志。
@@ -78,7 +78,7 @@ body:
       description: |
         为了确保 issue 可复现、可定位，请在提交前确认以下内容。
       options:
-        - label: 我确认正在使用 ColorOS 16 / Android 16 与 modern libxposed API 101 环境
+        - label: 我确认正在使用 ColorOS 16 / Android 16 与 YukiHook（libxposed API 102 底座） 环境
           required: true
         - label: 我已经提供可用于定位问题的日志或复现信息
           required: true
