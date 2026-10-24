@@ -8,41 +8,44 @@ body:
       value: |
         ### 请先确认环境范围
 
-        Glyph 当前仅维护 ColorOS 16 / Android 16（API 36）与 YukiHook（libxposed API 102 底座） / LSPosed 环境。
-        旧版 Android、旧版 ColorOS、legacy Xposed API、非官方系统修改版不在当前维护范围内。
+        Glyph 已支持 ColorOS 17，当前主要适配与维护目标为 ColorOS 17 + LSPosed（YukiHook / libxposed API 102 底座）。
+        优先处理 ColorOS 17 的适配问题，保留 ColorOS 16 / realme UI 7.0 的现有适配。
+        legacy Xposed API、非官方系统修改版不在当前维护范围内。
+
+        使用 Glyph 遇到的问题，请在本仓库反馈，请勿将本分支的问题提交到原作者的项目或要求原作者处理。
 
         发生异常、崩溃、闪退或功能性问题时，请提供包含 `Glyph` 的 LSPosed 日志。
   - type: input
     attributes:
       label: 模块版本
-      description: 请填写当前使用的模块完整版本号，例如：1.103-r2
+      description: 请填写当前使用的模块完整版本号。
     validations:
       required: true
   - type: dropdown
     attributes:
       label: 系统类型
-      description: 当前仅维护 ColorOS 16。
+      description: 当前主要适配 ColorOS 17，旧版本请如实填写系统信息。
       options:
         - ColorOS
+        - realme UI
     validations:
       required: true
   - type: input
     attributes:
       label: 系统版本
-      description: 请填写完整系统版本号，例如：ColorOS 16.x / 机型固件版本
+      description: 请填写完整系统版本号，例如：ColorOS 17.x / 机型固件版本
     validations:
       required: true
-  - type: dropdown
+  - type: input
     attributes:
       label: Android 版本
-      options:
-        - 16
+      description: 请填写设备实际的 Android 版本，可在系统设置中查看。
     validations:
       required: true
   - type: input
     attributes:
       label: LSPosed / Xposed 框架版本
-      description: 请填写当前使用的框架名称、版本号以及 API 版本，例如：LSPosed xxx / API 101
+      description: 请填写当前使用的框架名称、版本号以及 API 版本，例如：LSPosed xxx / API 102
     validations:
       required: true
   - type: input
@@ -78,7 +81,7 @@ body:
       description: |
         为了确保 issue 可复现、可定位，请在提交前确认以下内容。
       options:
-        - label: 我确认正在使用 ColorOS 16 / Android 16 与 YukiHook（libxposed API 102 底座） 环境
+        - label: 我已填写完整系统与框架版本，并了解 ColorOS 17 是当前主要适配目标
           required: true
         - label: 我已经提供可用于定位问题的日志或复现信息
           required: true

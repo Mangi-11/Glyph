@@ -1,6 +1,6 @@
 # Glyph
 
-Glyph 是 fork 自 [fankes/ColorOSNotifyIcon](https://github.com/fankes/ColorOSNotifyIcon) 的非官方个人分支，为 ColorOS 优化通知图标，可适配原生通知图标规范，或让通知图标跟随桌面当前主题。本分支由 [Mangi-11](https://github.com/Mangi-11) 独立维护和发布。
+Glyph 是 fork 自 [fankes/ColorOSNotifyIcon](https://github.com/fankes/ColorOSNotifyIcon) 的非官方个人分支，为 ColorOS 优化通知图标，可适配原生通知图标规范，或让通知图标跟随桌面当前主题。目前主要适配 ColorOS 17，由 [Mangi-11](https://github.com/Mangi-11) 独立维护和发布。
 
 Hook 层采用原作者 [fankes](https://github.com/fankes) 开发的 [YukiHook](https://github.com/HighCapable/YukiHook)，搭配 [KavaRef](https://github.com/HighCapable/KavaRef) 进行反射查找。YukiHook 提供简洁的 Kotlin Hook API、自动生成的模块入口和统一的日志支持，减少重复代码，便于维护与扩展。
 
@@ -10,7 +10,7 @@ Hook 层采用原作者 [fankes](https://github.com/fankes) 开发的 [YukiHook]
 
 - 状态栏通知图标替换
 - 息屏（AOD）时钟通知图标替换
-- ColorOS 16 锁屏岛（底部通知胶囊）图标替换
+- 锁屏岛（底部通知胶囊）图标替换
 - 通知中心小图标替换（可关）
 - 图标来源可选规则图标或桌面主题，支持通知图标跟随桌面当前主题 / 自定义图标
 - Oplus Push 系统推送特判（可关）
@@ -87,9 +87,9 @@ Oplus Push 代表目标应用生成的位图不等同于应用原生 `smallIcon`
 
 ## 适配说明
 
-仅适配 ColorOS 16 / realme UI 7.0 + LSPosed，不兼容旧版系统、旧版 Xposed 或其他框架。
+已支持 **ColorOS 17**，并以 **ColorOS 17 + LSPosed（libxposed API 102）** 为主要适配与维护目标。
 
-只服务最新系统版本，去掉历史兼容包袱，保持干净优雅。
+优先跟进 ColorOS 17 的系统变更和问题修复，保留 ColorOS 16 / realme UI 7.0 的现有适配。不兼容旧版 Xposed 或其他框架。
 
 ## 规则来源
 
@@ -104,21 +104,16 @@ Oplus Push 代表目标应用生成的位图不等同于应用原生 `smallIcon`
 
 ## 与原版的区别
 
-本分支沿用原项目的 YukiHook + KavaRef 技术栈，保留原始协议、版权声明和贡献者致谢。Hook 入口与作用域配置由 KSP 自动生成，配置和规则文件通过 libxposed 远程同步。
+原版 [ColorOSNotifyIcon](https://github.com/fankes/ColorOSNotifyIcon) 与本分支均已支持 ColorOS 17，并采用 YukiHook + KavaRef 的现代化 Hook 技术栈。本分支保留原始协议、版权声明和贡献者致谢。
 
-主要改动：
+本分支的主要改动：
 
-- 移除了旧框架兼容层
-- 用 [Miuix](https://github.com/compose-miuix-ui/miuix) 重写了 App UI（首页 / 规则 / 关于三栏，液态玻璃底栏）
-- 关于页支持打开本项目与 GitHub Releases 检查更新
-- 功能收敛到通知图标增强，去除其余杂项功能
-- 支持通知图标跟随桌面主题或自定义图标
-- 补齐 ColorOS 经典时钟息屏通知图标（`LockScreenNotificationIconData` → AodPlugin，以及旧版 `NotificationLayout`）
-- 补齐 ColorOS 16 锁屏岛底部通知胶囊图标（`CapsuleNotificationDataController`）。规则图标在锁屏岛染白轮廓，桌面主题保持彩色，避免多条聚合被白色遮罩盖成色块；白色着色不作用于下拉通知与锁屏堆叠
-- 规则管理支持为单个应用手动指定规则库图标，优先于包名匹配
-- 不做后台自动同步
+- 使用 [Miuix](https://github.com/compose-miuix-ui/miuix) 重写应用 UI：采用首页 / 规则 / 关于三栏布局与液态玻璃底栏。
+- 支持通知图标跟随桌面当前主题或自定义图标：可在规则图标与桌面主题之间切换。
 
 原版项目以原作者维护计划为准。
+
+使用 Glyph 遇到的问题，请在[本仓库 Issues](https://github.com/Mangi-11/Glyph/issues) 反馈，请勿将本分支的问题提交到原作者的项目或要求原作者处理。
 
 ## 注意事项
 
